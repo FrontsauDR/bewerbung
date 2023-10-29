@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class StartController {
         Connector conn = new Connector("test.db");
         conn.createDataBase();
         conn.createTable();
-        conn.updateOrderCount(2);
+        System.out.println(Arrays.toString(conn.getOrder(2)));
     }
 
     /**

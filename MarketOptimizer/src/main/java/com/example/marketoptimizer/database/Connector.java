@@ -5,6 +5,7 @@ import java.sql.*;
 import java.io.File;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.text.SimpleDateFormat;
 import java.sql.Statement;
@@ -271,6 +272,56 @@ public class Connector {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Get count of all orders sorted for items
+     * @param userID
+     * @return
+     */
+    public String[] getOrder(Integer userID) {
+        String sql = "SELECT itemName, COUNT(*) AS count FROM orders WHERE userID = ? GROUP BY itemName ORDER BY COUNT(*) DESC";
+        String[] orderArray = new String[350];
+
+        try (Connection conn = this.connection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userID);
+            ResultSet set = pstmt.executeQuery();
+            int i = 0;
+
+            while (set.next()) {
+                orderArray[i] = set.getString(1) + "\t" + set.getString(2);
+                i++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return orderArray;
+    }
+
+    /**
+     * Get items from database into String[]
+     * @param userID
+     * @return
+     */
+    public String[] getItems(Integer userID) {
+        String sql = "SELECT itemName FROM items WHERE userID = ?";
+        String[] itemArray = new String[350];
+
+        try (Connection conn = this.connection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userID);
+            ResultSet set = pstmt.executeQuery();
+            int i = 0;
+
+            while (set.next()) {
+                itemArray[i] = set.getString(1);
+                i++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return itemArray;
     }
 
 
