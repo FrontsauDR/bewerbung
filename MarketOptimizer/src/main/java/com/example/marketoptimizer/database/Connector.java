@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.io.File;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.text.SimpleDateFormat;
 import java.sql.Statement;
 import java.util.Date;
@@ -280,12 +278,18 @@ public class Connector {
      * @return
      */
     public String[] getOrder(Integer userID) {
-        String sql = "SELECT itemName, COUNT(*) AS count FROM orders WHERE userID = ? GROUP BY itemName ORDER BY COUNT(*) DESC";
+        String sql = "SELECT itemName, COUNT(*) AS count FROM orders WHERE userID = ? AND time > ? GROUP BY itemName ORDER BY COUNT(*) DESC";
         String[] orderArray = new String[350];
+
+        // get 1 month prior to limit results
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        String finishedString = parseTime(cal);
 
         try (Connection conn = this.connection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, userID);
+            pstmt.setString(2, finishedString);
             ResultSet set = pstmt.executeQuery();
             int i = 0;
 
@@ -323,6 +327,190 @@ public class Connector {
         }
         return itemArray;
     }
+
+    //public String[] getItemInfo(Integer userID, String itemName) {
+
+    //}
+
+    /**
+     * parse Calendar to String
+     * @param cal
+     * @return
+     */
+    public String parseTime(Calendar cal) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return dateFormat.format(cal.getTime());
+    }
+
+    /**
+     * Parse Date to String
+     * @param date
+     * @return
+     */
+    public String parseTime(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return dateFormat.format(date);
+    }
+
+
+    public Integer[] getCurrentValues(String item, Integer userID) {
+        String sqlCount = "SELECT COUNT(*) AS count FROM orders WHERE itemName = ? AND userID = ? AND time > ?";
+        String sqlSell = "SELECT avg(price) AS sell FROM orders WHERE itemName = ? AND price > 0 AND userID = ? AND time > ?";
+        String sqlBuy = "SELECT avg(price) AS buy FROM orders WHERE itemName = ? AND price < 0 AND userID = ? AND time > ?";
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        String finishedString = parseTime(cal);
+        Integer[] currentValues = new Integer[3];
+        try (Connection conn = this.connection();
+             PreparedStatement count = conn.prepareStatement(sqlCount);
+             PreparedStatement sell = conn.prepareStatement(sqlSell);
+             PreparedStatement buy = conn.prepareStatement(sqlBuy)) {
+            // count statement
+            count.setString(1, item);
+            count.setInt(2, userID);
+            count.setString(3, finishedString);
+            // sell statement
+            sell.setString(1, item);
+            sell.setInt(2, userID);
+            sell.setString(3, finishedString);
+            // buy statement
+            buy.setString(1, item);
+            buy.setInt(2, userID);
+            buy.setString(3, finishedString);
+            // results for each query
+            ResultSet setCount = count.executeQuery();
+            ResultSet setSell = sell.executeQuery();
+            ResultSet setBuy = buy.executeQuery();
+
+            currentValues[0] = setCount.getInt("count");
+            currentValues[1] = setSell.getInt("sell");
+            currentValues[2] = setBuy.getInt("buy");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return currentValues;
+    }
+
+    public Integer[] getLastValues(String item, Integer userID) {
+        String sqlCount = "SELECT COUNT(*) AS count FROM orders WHERE itemName = ? AND userID = ? AND time BETWEEN ? AND ?";
+        String sqlSell = "SELECT avg(price) AS sell FROM orders WHERE itemName = ? AND price > 0 AND userID = ? AND time BETWEEN ? AND ?";
+        String sqlBuy = "SELECT avg(price) AS buy FROM orders WHERE itemName = ? AND price < 0 AND userID = ? AND time BETWEEN ? AND ?";
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        String finishedString = parseTime(cal);
+        cal.add(Calendar.MONTH, -1);
+        String olderTime = parseTime(cal);
+        Integer[] currentValues = new Integer[3];
+        try (Connection conn = this.connection();
+             PreparedStatement count = conn.prepareStatement(sqlCount);
+             PreparedStatement sell = conn.prepareStatement(sqlSell);
+             PreparedStatement buy = conn.prepareStatement(sqlBuy)) {
+            // count statement
+            count.setString(1, item);
+            count.setInt(2, userID);
+            count.setString(3, olderTime);
+            count.setString(4, finishedString);
+            // sell statement
+            sell.setString(1, item);
+            sell.setInt(2, userID);
+            sell.setString(3, olderTime);
+            sell.setString(4, finishedString);
+            // buy statement
+            buy.setString(1, item);
+            buy.setInt(2, userID);
+            buy.setString(3, olderTime);
+            buy.setString(4, finishedString);
+            // results for each query
+            ResultSet setCount = count.executeQuery();
+            ResultSet setSell = sell.executeQuery();
+            ResultSet setBuy = buy.executeQuery();
+
+            currentValues[0] = setCount.getInt("count");
+            currentValues[1] = setSell.getInt("sell");
+            currentValues[2] = setBuy.getInt("buy");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return currentValues;
+    }
+
+        public Integer[] getOldValues(String item, Integer userID) {
+            String sqlCount = "SELECT COUNT(*) AS count FROM orders WHERE itemName = ? AND userID = ? AND time BETWEEN ? AND ?";
+        String sqlSell = "SELECT avg(price) AS sell FROM orders WHERE itemName = ? AND price > 0 AND userID = ? AND time BETWEEN ? AND ?";
+        String sqlBuy = "SELECT avg(price) AS buy FROM orders WHERE itemName = ? AND price < 0 AND userID = ? AND time BETWEEN ? AND ?";
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        String finishedString = parseTime(cal);
+        cal.add(Calendar.MONTH, -2);
+        String olderTime = parseTime(cal);
+        Integer[] currentValues = new Integer[3];
+        try (Connection conn = this.connection();
+             PreparedStatement count = conn.prepareStatement(sqlCount);
+             PreparedStatement sell = conn.prepareStatement(sqlSell);
+             PreparedStatement buy = conn.prepareStatement(sqlBuy)) {
+            // count statement
+            count.setString(1, item);
+            count.setInt(2, userID);
+            count.setString(3, olderTime);
+            count.setString(4, finishedString);
+            // sell statement
+            sell.setString(1, item);
+            sell.setInt(2, userID);
+            sell.setString(3, olderTime);
+            sell.setString(4, finishedString);
+            // buy statement
+            buy.setString(1, item);
+            buy.setInt(2, userID);
+            buy.setString(3, olderTime);
+            buy.setString(4, finishedString);
+            // results for each query
+            ResultSet setCount = count.executeQuery();
+            ResultSet setSell = sell.executeQuery();
+            ResultSet setBuy = buy.executeQuery();
+
+            currentValues[0] = setCount.getInt("count");
+            currentValues[1] = setSell.getInt("sell");
+            currentValues[2] = setBuy.getInt("buy");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return currentValues;
+        }
+
+    public Integer[] getAllTimeValues(String item, Integer userID) {
+        String sqlCount = "SELECT COUNT(*) AS count FROM orders WHERE itemName = ? HAVING userID = ?";
+        String sqlSell = "SELECT avg(price) AS sell FROM orders WHERE itemName = ? AND price > 0 AND userID = ?";
+        String sqlBuy = "SELECT avg(price) AS buy FROM orders WHERE itemName = ? AND price < 0 AND userID = ?";
+
+        Integer[] currentValues = new Integer[3];
+        try (Connection conn = this.connection();
+             PreparedStatement count = conn.prepareStatement(sqlCount);
+             PreparedStatement sell = conn.prepareStatement(sqlSell);
+             PreparedStatement buy = conn.prepareStatement(sqlBuy)) {
+            count.setString(1, item);
+            count.setInt(2, userID);
+            sell.setString(1, item);
+            sell.setInt(2, userID);
+            buy.setString(1, item);
+            buy.setInt(2, userID);
+            // results for each query
+            ResultSet setCount = count.executeQuery();
+            ResultSet setSell = sell.executeQuery();
+            ResultSet setBuy = buy.executeQuery();
+
+            currentValues[0] = setCount.getInt("count");
+            currentValues[1] = setSell.getInt("sell");
+            currentValues[2] = setBuy.getInt("buy");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return currentValues;
+    }
+
+
 
 
 }

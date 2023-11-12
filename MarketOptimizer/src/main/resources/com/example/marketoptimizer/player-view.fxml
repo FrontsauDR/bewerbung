@@ -9,6 +9,223 @@
 <?import javafx.geometry.Insets?>
 
 
-<VBox fx:id="vbox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.marketoptimizer.PlayerController">
-    <Label fx:id="welcomeText" text="welcome"/>
-</VBox>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<GridPane fx:id="startGrid" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.marketoptimizer.PlayerController" gridLinesVisible="true" prefWidth="1920" stylesheets="@style.css">
+    <HBox maxWidth="1220">
+        <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+        </padding>
+        <Text fx:id="playerName" text="playerName" stroke="WHITE">
+            <font>
+                <Font size="26"/>
+            </font>
+        </Text>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <HBox alignment="CENTER_RIGHT" >
+            <Button text="BACK" onAction="#backButton"  prefWidth="100" alignment="CENTER"/>
+            <Button text="EXIT" onAction="#exitButton" prefWidth="100" alignment="CENTER"/>
+        </HBox>
+    </HBox>
+
+
+    <VBox fx:id="scrollVBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" spacing="20.0" prefWidth="1220" GridPane.rowIndex="1">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+        <ScrollPane fx:id="orderScrollPane"> </ScrollPane>
+    </VBox>
+    <VBox fx:id="itemView" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" spacing="20.0" minWidth="700" prefHeight="500" GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="TOP_CENTER">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+
+
+        <!-- HBoxes for current count, sell, buy labels/text -->
+        <Label alignment="CENTER" text="Current Information" prefWidth="350">
+            <font>
+                <Font name="System Bold" size="23.0" />
+            </font>
+            <padding>
+                <Insets top="40.0"/>
+            </padding>
+        </Label>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="currentCountLabel" prefWidth="250" text="Count" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="currentCountText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="currentSellLabel" prefWidth="250" text="Avg Sell" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="currentSellText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="currentBuyLabel" prefWidth="250" text="Avg Buy" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="currentBuyText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+
+
+        <!-- HBoxes for last month count, sell, buy labels/text -->
+        <Label alignment="CENTER" text="Last Month Information" prefWidth="350">
+            <font>
+                <Font name="System Bold" size="23.0" />
+            </font>
+            <padding>
+                <Insets top="40.0"/>
+            </padding>
+        </Label>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="lastCountLabel" prefWidth="250" text="Count" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="lastCountText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="lastSellLabel" prefWidth="250" text="Avg Sell" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="lastSellText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="lastBuyLabel" prefWidth="250" text="Avg Buy" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="lastBuyText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+
+
+        <!-- HBoxes for month before last month count, sell, buy labels/text -->
+        <Label alignment="CENTER" text="Month Before Last Information" prefWidth="350">
+            <font>
+                <Font name="System Bold" size="23.0" />
+            </font>
+            <padding>
+                <Insets top="40.0"/>
+            </padding>
+        </Label>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="beforeCountLabel" prefWidth="250" text="Count" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="beforeCountText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="beforeSellLabel" prefWidth="250" text="Avg Sell" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="beforeSellText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="beforeBuyLabel" prefWidth="250" text="Avg Buy" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="beforeBuyText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+
+
+        <!-- HBoxes for all time count, sell, buy labels/text -->
+        <Label alignment="CENTER" text="All Time Information" prefWidth="350">
+            <font>
+                <Font name="System Bold" size="23.0" />
+            </font>
+            <padding>
+                <Insets top="40.0"/>
+            </padding>
+        </Label>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="allCountLabel" prefWidth="250" text="Count" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="allCountText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="allSellLabel" prefWidth="250" text="Avg Sell" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="allSellText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+        <HBox prefWidth="400" alignment="CENTER">
+            <Label fx:id="allBuyLabel" prefWidth="250" text="Avg Buy" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="allBuyText" text="0" prefWidth="150" alignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="16.0" />
+                </font>
+            </Label>
+        </HBox>
+    </VBox>
+</GridPane>

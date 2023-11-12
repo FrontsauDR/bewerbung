@@ -2,7 +2,10 @@ package com.example.marketoptimizer;
 
 
 import com.example.marketoptimizer.database.Connector;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -10,18 +13,18 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.stage.Stage;
 
 /*
  * Class to control start page and add functionality
  */
 public class StartController {
+
+    private PlayerController playerC;
 
     @FXML
     private Label welcomeText;
@@ -33,6 +36,7 @@ public class StartController {
     private TextArea inputField, quickBarField;
     @FXML
     private ComboBox<String> playerComboBox, playerComboBox2 = new ComboBox();
+    private Stage primaryStage;
 
 
     ArrayList<NameSettings> nameArray = new ArrayList<>();
@@ -43,12 +47,12 @@ public class StartController {
      * @throws SQLException
      */
     @FXML
-    void initialize() throws SQLException {
+    void initialize() throws SQLException, ParseException {
         insertSettings();
         Connector conn = new Connector("test.db");
         conn.createDataBase();
         conn.createTable();
-        System.out.println(Arrays.toString(conn.getOrder(2)));
+        Connector conn2 = new Connector("marketoptimizer.db");
     }
 
     /**
@@ -172,18 +176,21 @@ public class StartController {
     }
 
     @FXML
-    private void switchPlayer1() {
-
+    private void switchPlayer1() throws IOException {
+        writeActivePlayer(player1.getText());
+        OptimizerApplication.changeScene("player-view.fxml");
     }
 
     @FXML
-    private void switchPlayer2() {
-
+    private void switchPlayer2() throws IOException {
+        writeActivePlayer(player2.getText());
+        OptimizerApplication.changeScene("player-view.fxml");
     }
 
     @FXML
-    private void switchPlayer3() {
-
+    private void switchPlayer3() throws IOException {
+        writeActivePlayer(player3.getText());
+        OptimizerApplication.changeScene("player-view.fxml");
     }
 
     /**
@@ -243,6 +250,23 @@ public class StartController {
         }
 
     }
+
+    private void writeActivePlayer(String name) {
+        settingsArray = FileChecker.readJson();
+        NameSettings activePlayer = new NameSettings("activePlayer", name);
+        nameArray.add(settingsArray.get(0));
+        nameArray.add(settingsArray.get(1));
+        nameArray.add(settingsArray.get(2));
+        nameArray.add(activePlayer);
+        writeJson();
+    }
+
+    @FXML
+    private void exitButton() {
+        Platform.exit();
+        System.exit(0);
+    }
+
 
 
 }

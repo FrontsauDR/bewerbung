@@ -15,8 +15,8 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
 
-
-<GridPane fx:id="startGrid" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.marketoptimizer.StartController" gridLinesVisible="true" prefWidth="1920" stylesheets="@style.css">
+<!-- gridLinesVisible="true" -->
+<GridPane fx:id="startGrid" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.marketoptimizer.StartController" prefWidth="1920" stylesheets="@style.css">
     <!-- Left Column for input TextArea -->
     <VBox spacing="20.0" prefWidth="1220">
         <padding>
@@ -43,7 +43,7 @@
                     <Font size="16"/>
                 </font>
             </TextField>
-            <Button text="Switch to User" onAction="#switchPlayer1" prefWidth="150" prefHeight="50" />
+            <Button text="Switch to User" onAction="#switchPlayer1" prefWidth="150" prefHeight="50" userData="0"/>
         </HBox>
         <HBox spacing="20" >
             <TextField fx:id="player2" prefWidth="200" prefHeight="50" alignment="CENTER">
@@ -51,7 +51,7 @@
                     <Font size="16"/>
                 </font>
             </TextField>
-            <Button text="Switch to User" onAction="#switchPlayer2" prefWidth="150" prefHeight="50" />
+            <Button text="Switch to User" onAction="#switchPlayer2" prefWidth="150" prefHeight="50" userData="1"/>
         </HBox>
         <HBox spacing="20" >
             <TextField fx:id="player3" prefWidth="200" prefHeight="50" alignment="CENTER">
@@ -59,7 +59,7 @@
                     <Font size="16"/>
                 </font>
             </TextField>
-            <Button text="Switch to User" onAction="#switchPlayer3" prefWidth="150" prefHeight="50" />
+            <Button text="Switch to User" onAction="#switchPlayer3" prefWidth="150" prefHeight="50" userData="2"/>
         </HBox>
         <HBox alignment="CENTER">
             <Button text="Apply" onAction="#applyButton" prefWidth="150" prefHeight="50" />
@@ -79,6 +79,12 @@
         </padding>
         <ComboBox fx:id="playerComboBox2" promptText="Choose Character" prefWidth="350"/>
         <Button text="Read Input" onAction="#onQuickBarReadButtonClick" prefWidth="100"/>
+    </HBox>
+    <HBox GridPane.rowIndex="3" GridPane.columnIndex="2" alignment="CENTER_RIGHT" GridPane.hgrow="ALWAYS">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+        <Button text="Exit" onAction="#exitButton" prefWidth="150" prefHeight="50"/>
     </HBox>
 </GridPane>
 
